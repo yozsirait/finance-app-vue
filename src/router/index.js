@@ -6,15 +6,8 @@ import DefaultLayout from "@/layouts/DefaultLayout.vue";
 
 // Pages
 import Login from "@/pages/Login.vue";
+import Register from "@/pages/Register.vue"; // 🔥 Tambah Register
 import Dashboard from "@/pages/Dashboard.vue";
-// import Members from "@/pages/Members.vue";
-// import Accounts from "@/pages/Accounts.vue";
-// import Categories from "@/pages/Categories.vue";
-// import Budgets from "@/pages/Budgets.vue";
-// import Transactions from "@/pages/Transactions.vue";
-// import Reports from "@/pages/Reports.vue";
-// import Profile from "@/pages/Profile.vue";
-// import SavingTargets from "@/pages/SavingTargets.vue";
 
 const routes = [
   {
@@ -23,20 +16,17 @@ const routes = [
     meta: { guestOnly: true },
   },
   {
+    path: "/register",
+    component: Register,
+    meta: { guestOnly: true }, // 🔒 hanya bisa diakses kalau belum login
+  },
+  {
     path: "/",
     component: DefaultLayout,
     meta: { requiresAuth: true },
     children: [
       { path: "", redirect: "/dashboard" },
       { path: "dashboard", component: Dashboard },
-    //   { path: "members", component: Members },
-    //   { path: "accounts", component: Accounts },
-    //   { path: "categories", component: Categories },
-    //   { path: "budgets", component: Budgets },
-    //   { path: "transactions", component: Transactions },
-    //   { path: "reports", component: Reports },
-    //   { path: "saving-targets", component: SavingTargets },
-    //   { path: "profile", component: Profile },
     ],
   },
 ];
@@ -50,12 +40,10 @@ export const router = createRouter({
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore();
 
-  // Jika butuh login tapi belum login
   if (to.meta.requiresAuth && !auth.token) {
     return next("/login");
   }
 
-  // Jika sudah login tapi masuk ke /login
   if (to.meta.guestOnly && auth.token) {
     return next("/dashboard");
   }
