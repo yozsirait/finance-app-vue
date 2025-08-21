@@ -6,9 +6,10 @@ import DefaultLayout from "@/layouts/DefaultLayout.vue";
 
 // Pages
 import Login from "@/pages/Login.vue";
-import Register from "@/pages/Register.vue"; // 🔥 Tambah Register
+import Register from "@/pages/Register.vue";
 import Dashboard from "@/pages/Dashboard.vue";
 import Member from "@/pages/Members.vue";
+import Category from "@/pages/Categories.vue";
 
 const routes = [
   {
@@ -19,7 +20,7 @@ const routes = [
   {
     path: "/register",
     component: Register,
-    meta: { guestOnly: true }, // 🔒 hanya bisa diakses kalau belum login
+    meta: { guestOnly: true },
   },
   {
     path: "/",
@@ -27,8 +28,21 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       { path: "", redirect: "/dashboard" },
-      { path: "dashboard", component: Dashboard },
-      { path: "members", component: Member },
+      {
+        path: "dashboard",
+        component: Dashboard,
+        meta: { breadcrumb: "Dashboard" },
+      },
+      {
+        path: "members",
+        component: Member,
+        meta: { breadcrumb: "Members" },
+      },
+      {
+        path: "categories",
+        component: Category,
+        meta: { breadcrumb: "Categories" },
+      },
     ],
   },
 ];

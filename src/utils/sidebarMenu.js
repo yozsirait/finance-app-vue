@@ -28,14 +28,14 @@ export const sidebarMenu = [
 //       { label: "Account Types", to: "/accounts/types" }
 //     ]
 //   },
-//   {
-//     label: "Categories & Budgets",
-//     icon: FolderTree,
-//     children: [
-//       { label: "Categories", to: "/categories" },
-//       { label: "Budgets", to: "/budgets" }
-//     ]
-//   },
+  {
+    label: "Categories & Budgets",
+    icon: FolderTree,
+    children: [
+      { label: "Categories", to: "/categories" },
+      // { label: "Budgets", to: "/budgets" }
+    ]
+  },
 //   {
 //     label: "Transactions",
 //     icon: ArrowsLeftRight,

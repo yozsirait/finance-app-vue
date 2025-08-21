@@ -8,6 +8,9 @@
       <!-- Navbar -->
       <Navbar @toggle-sidebar="toggleSidebar" />
 
+      <!-- Breadcrumb -->
+      <Breadcrumb />
+
       <!-- Content -->
       <main class="flex-1 overflow-y-auto p-6">
         <router-view />
@@ -20,6 +23,7 @@
 import { ref } from "vue";
 import Navbar from "@/components/Navbar.vue";
 import Sidebar from "@/components/Sidebar.vue";
+import Breadcrumb from "@/components/Breadcrumb.vue";
 
 const sidebarOpen = ref(true);
 
