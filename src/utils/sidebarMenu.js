@@ -33,7 +33,7 @@ export const sidebarMenu = [
     icon: FolderTree,
     children: [
       { label: "Categories", to: "/categories" },
-      // { label: "Budgets", to: "/budgets" }
+      { label: "Budgets", to: "/budgets" }
     ]
   },
 //   {

@@ -10,6 +10,7 @@ import Register from "@/pages/Register.vue";
 import Dashboard from "@/pages/Dashboard.vue";
 import Member from "@/pages/Members.vue";
 import Category from "@/pages/Categories.vue";
+import Budget from "@/pages/Budgets.vue";
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
         path: "categories",
         component: Category,
         meta: { breadcrumb: "Categories" },
+      },
+      {
+        path: "budgets",
+        component: Budget,
+        meta: { breadcrumb: "Budgets" },
       },
     ],
   },
