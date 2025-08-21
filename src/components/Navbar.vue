@@ -2,7 +2,7 @@
   <header class="flex items-center justify-between px-4 py-2 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
     <!-- Left: Toggle Sidebar -->
     <button
-      @click="$emit('toggleSidebar')"
+      @click="$emit('toggle-sidebar')"
       class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
     >
       <Menu class="w-6 h-6 text-gray-600 dark:text-gray-300" />
@@ -22,12 +22,9 @@
 
     <!-- Right: User Menu -->
     <div class="flex items-center gap-4">
-      <!-- Notifications -->
       <button class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
         <Bell class="w-6 h-6 text-gray-600 dark:text-gray-300" />
       </button>
-
-      <!-- Profile Dropdown -->
       <div class="relative" @click="toggleProfile">
         <img
           src="https://i.pravatar.cc/40"
@@ -45,12 +42,6 @@
             >
               My Account
             </router-link>
-            <!-- <button
-              @click="logout"
-              class="block w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              Logout
-            </button> -->
           </div>
         </transition>
       </div>
@@ -63,24 +54,7 @@ import { ref } from "vue";
 import { Menu, Search, Bell } from "lucide-vue-next";
 
 const showProfile = ref(false);
-
 const toggleProfile = () => {
   showProfile.value = !showProfile.value;
 };
-
-// const logout = () => {
-//   // TODO: Integrasi API logout
-//   console.log("Logout clicked");
-// };
 </script>
-
-<style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

@@ -6,14 +6,8 @@
     <!-- Logo -->
     <div class="flex items-center justify-between p-4">
       <h1 class="text-xl font-bold text-gray-800 dark:text-gray-100">
-        {{ isOpen ? 'Finance' : 'FIN' }}
+        {{ isOpen ? 'Finance App' : 'FIN' }}
       </h1>
-      <!-- <button
-        @click="$emit('toggle')"
-        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-      >
-        <Menu class="w-6 h-6 text-gray-600 dark:text-gray-300" />
-      </button> -->
     </div>
 
     <!-- Navigation -->
@@ -63,24 +57,11 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useDark, useToggle } from "@vueuse/core";
-import {
-  Menu,
-  ChevronDown,
-  LayoutDashboard,
-  Users,
-  Wallet,
-  FolderTree,
-  //   ArrowsLeftRight,
-  Target,
-  BarChart3,
-  User,
-  Moon,
-  Sun
-} from "lucide-vue-next";
+import { Menu, ChevronDown, Moon, Sun } from "lucide-vue-next";
 import { sidebarMenu } from "@/utils/sidebarMenu";
 
-defineProps({
-  isOpen: { type: Boolean, default: true },
+const props = defineProps({
+  isOpen: { type: Boolean, default: true }
 });
 
 const openIndex = ref(null);
@@ -88,7 +69,6 @@ const toggleDropdown = (idx) => {
   openIndex.value = openIndex.value === idx ? null : idx;
 };
 
-// dark mode
 const isDark = useDark();
 const toggleDarkMode = useToggle(isDark);
 
