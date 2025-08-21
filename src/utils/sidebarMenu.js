@@ -20,14 +20,11 @@ export const sidebarMenu = [
     icon: Users,
     to: "/members",
   },
-//   {
-//     label: "Accounts",
-//     icon: Wallet,
-//     children: [
-//       { label: "Accounts", to: "/accounts" },
-//       { label: "Account Types", to: "/accounts/types" }
-//     ]
-//   },
+  {
+    label: "Accounts",
+    icon: Wallet,
+    to: "/accounts",    
+  },
   {
     label: "Categories & Budgets",
     icon: FolderTree,
