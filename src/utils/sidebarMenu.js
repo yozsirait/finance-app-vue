@@ -15,11 +15,11 @@ export const sidebarMenu = [
     icon: LayoutDashboard,
     to: "/dashboard",
   },
-//   {
-//     label: "Members",
-//     icon: Users,
-//     to: "/members",
-//   },
+  {
+    label: "Members",
+    icon: Users,
+    to: "/members",
+  },
 //   {
 //     label: "Accounts",
 //     icon: Wallet,

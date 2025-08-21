@@ -1,7 +1,7 @@
 <template>
   <aside :class="[
     'h-screen bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-all duration-300',
-    isOpen ? 'w-64' : 'w-20'
+    isOpen ? 'w-54' : 'w-15'
   ]">
     <!-- Logo -->
     <div class="flex items-center justify-between p-4">

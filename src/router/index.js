@@ -8,6 +8,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.vue";
 import Login from "@/pages/Login.vue";
 import Register from "@/pages/Register.vue"; // 🔥 Tambah Register
 import Dashboard from "@/pages/Dashboard.vue";
+import Member from "@/pages/Members.vue";
 
 const routes = [
   {
@@ -27,6 +28,7 @@ const routes = [
     children: [
       { path: "", redirect: "/dashboard" },
       { path: "dashboard", component: Dashboard },
+      { path: "members", component: Member },
     ],
   },
 ];
