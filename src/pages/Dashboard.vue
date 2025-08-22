@@ -23,10 +23,7 @@
         <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
           Expense by Category
         </h2>
-        <PieChart
-          v-if="dashboardData.pie_chart_data?.length"
-          :categories="dashboardData.pie_chart_data"
-        />
+        <PieChart v-if="dashboardData.pie_chart_data?.length" :categories="dashboardData.pie_chart_data" />
         <p v-else class="text-gray-400">No category data available.</p>
       </div>
 
@@ -35,12 +32,8 @@
         <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">
           Income vs Expense per Category
         </h2>
-        <BarChart
-          v-if="hasBarChartData"
-          :bar-chart-data="dashboardData.bar_chart_data"
-          :current-month="dashboardData.current_month"
-          :current-year="dashboardData.current_year"
-        />
+        <BarChart v-if="hasBarChartData" :bar-chart-data="dashboardData.bar_chart_data"
+          :current-month="dashboardData.current_month" :current-year="dashboardData.current_year" />
         <p v-else class="text-gray-400">No bar chart data available.</p>
       </div>
     </div>
@@ -60,7 +53,12 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-            <tr v-for="tx in enrichedTransactions" :key="tx.ID">
+            <tr v-if="!enrichedTransactions.length">
+              <td colspan="5" class="px-4 py-4 text-center text-gray-400 dark:text-gray-500">
+                No Data Available
+              </td>
+            </tr>
+            <tr v-else v-for="tx in enrichedTransactions" :key="tx.ID">
               <td class="px-4 py-2 text-sm">{{ formatDate(tx.Date) }}</td>
               <td class="px-4 py-2 text-sm">{{ tx.Description }}</td>
               <td class="px-4 py-2 text-sm">{{ tx.CategoryName || "-" }}</td>
@@ -73,6 +71,7 @@
         </table>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -107,7 +106,7 @@ const summaryCards = computed(() => [
 // Check if bar chart has meaningful data
 const hasBarChartData = computed(() => {
   if (!dashboardData.value.bar_chart_data?.length) return false;
-  
+
   return dashboardData.value.bar_chart_data.some(
     item => item.income > 0 || item.expense > 0
   );
@@ -116,7 +115,7 @@ const hasBarChartData = computed(() => {
 // Enrich transactions with category names
 const enrichedTransactions = computed(() => {
   if (!dashboardData.value.top_transactions?.length) return [];
-  
+
   return dashboardData.value.top_transactions.map(tx => {
     const category = categories.value.find(cat => cat.ID === tx.CategoryID);
     return {
@@ -129,7 +128,8 @@ const enrichedTransactions = computed(() => {
 // Fetch categories
 const fetchCategories = async () => {
   try {
-    const { data } = await api.get("/api/categories");
+    const userId = localStorage.getItem("user_id"); // ambil user_id login
+    const { data } = await api.get(`/api/categories?user_id=${userId}`);
     if (data.success) {
       categories.value = data.data;
     }
@@ -141,7 +141,8 @@ const fetchCategories = async () => {
 // Fetch dashboard data
 const fetchDashboardData = async () => {
   try {
-    const { data } = await api.get("/api/dashboard");
+    const userId = localStorage.getItem("user_id"); // ambil user_id login
+    const { data } = await api.get(`/api/dashboard?user_id=${userId}`);
     if (data.success) {
       dashboardData.value = data.data;
     }

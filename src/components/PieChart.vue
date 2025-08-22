@@ -1,6 +1,9 @@
 <template>
   <div class="h-72 relative">
-    <Pie :data="chartData" :options="chartOptions" />
+    <Pie v-if="hasData" :data="chartData" :options="chartOptions" />
+    <div v-else class="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+      No data available
+    </div>
   </div>
 </template>
 
@@ -28,23 +31,28 @@ const { options: baseOptions, isDark } = useChartOptions();
 // Override options khusus untuk pie chart
 const chartOptions = computed(() => {
   const options = { ...baseOptions.value };
-  
-  // Pastikan scales tidak ditampilkan untuk pie chart
-  options.scales = {
-    x: { display: false },
-    y: { display: false }
-  };
+  // options.scales = {
+  //   x: { display: false },
+  //   y: { display: false },
+  // };
+  // Hapus scales sepenuhnya supaya PieChart tidak error
+  delete options.scales;
   
   return options;
 });
 
+// Cek apakah ada data untuk chart
+const hasData = computed(() => props.categories && props.categories.length > 0);
+
 const chartData = computed(() => ({
-  labels: props.categories.map((c) => c.name),
+  labels: hasData.value ? props.categories.map((c) => c.name) : [],
   datasets: [
     {
       label: "Top Categories",
-      data: props.categories.map((c) => c.total),
-      backgroundColor: generateColors(props.categories.length, isDark.value),
+      data: hasData.value ? props.categories.map((c) => c.total) : [],
+      backgroundColor: hasData.value
+        ? generateColors(props.categories.length, isDark.value)
+        : [],
       borderWidth: 2,
       hoverBorderWidth: 3,
       borderColor: isDark.value ? "#1f2937" : "#ffffff",
