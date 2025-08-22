@@ -34,6 +34,9 @@
                         <tr>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
+                                Member</th>                            
+                            <th
+                                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
                                 Name</th>
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">
@@ -57,6 +60,7 @@
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         <tr v-for="acc in accounts" :key="acc.ID">
+                            <td class="px-6 py-4">{{ acc.Member?.Name }}</td>
                             <td class="px-6 py-4">{{ acc.Name }}</td>
                             <td class="px-6 py-4">{{ acc.Type }}</td>
                             <td class="px-6 py-4">{{ formatCurrency(acc.Balance) }}</td>
@@ -251,6 +255,7 @@ const createAccount = async () => {
             accounts.value.push(data.data);
             closeModal();
             showToast("Account created successfully!");
+            await fetchAccounts(); // refresh biar dapet relasi Member
         }
     } catch (err) {
         showToast(err.response?.data?.message || err.message, "error");
@@ -276,6 +281,7 @@ const updateAccount = async () => {
             if (idx !== -1) accounts.value[idx] = data.data;
             closeModal();
             showToast("Account updated successfully!");
+            await fetchAccounts();
         }
     } catch (err) {
         showToast(err.response?.data?.message || err.message, "error");
