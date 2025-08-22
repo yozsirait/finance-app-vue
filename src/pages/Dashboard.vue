@@ -96,6 +96,7 @@ const dashboardData = ref({
 
 const categories = ref([]);
 
+
 const summaryCards = computed(() => [
   { label: "Income", value: dashboardData.value.income_this_month || 0, icon: TrendingUp },
   { label: "Expense", value: dashboardData.value.expense_this_month || 0, icon: TrendingDown },
@@ -125,10 +126,11 @@ const enrichedTransactions = computed(() => {
   });
 });
 
+const userId = localStorage.getItem("user_id"); // ambil user_id login
+
 // Fetch categories
 const fetchCategories = async () => {
-  try {
-    const userId = localStorage.getItem("user_id"); // ambil user_id login
+  try {    
     const { data } = await api.get(`/api/categories?user_id=${userId}`);
     if (data.success) {
       categories.value = data.data;
@@ -140,8 +142,7 @@ const fetchCategories = async () => {
 
 // Fetch dashboard data
 const fetchDashboardData = async () => {
-  try {
-    const userId = localStorage.getItem("user_id"); // ambil user_id login
+  try {    
     const { data } = await api.get(`/api/dashboard?user_id=${userId}`);
     if (data.success) {
       dashboardData.value = data.data;
