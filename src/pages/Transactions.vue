@@ -1,10 +1,45 @@
 <template>
     <div>
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-6">
+        <!-- Header + Filter -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
                 Transactions
             </h1>
+            <div class="flex flex-wrap gap-2 items-center">
+                <!-- Member Filter -->
+                <select v-model="filters.member_id" @change="fetchTransactions"
+                    class="p-2 border rounded dark:bg-gray-700 dark:text-white">
+                    <option value="">All Members</option>
+                    <option v-for="m in members" :key="m.ID" :value="m.ID">{{ m.Name }}</option>
+                </select>
+
+                <!-- Category Filter -->
+                <select v-model="filters.category_id" @change="fetchTransactions"
+                    class="p-2 border rounded dark:bg-gray-700 dark:text-white">
+                    <option value="">All Categories</option>
+                    <option v-for="c in categories" :key="c.ID" :value="c.ID">{{ c.Name }}</option>
+                </select>
+
+                <!-- Type Filter -->
+                <select v-model="filters.type" @change="fetchTransactions"
+                    class="p-2 border rounded dark:bg-gray-700 dark:text-white">
+                    <option value="">All Types</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+
+                <!-- Date Range -->
+                <input type="date" v-model="filters.start_date" @change="fetchTransactions"
+                    class="p-2 border rounded dark:bg-gray-700 dark:text-white" />
+                <input type="date" v-model="filters.end_date" @change="fetchTransactions"
+                    class="p-2 border rounded dark:bg-gray-700 dark:text-white" />
+
+                <!-- Reset Button -->
+                <button @click="resetFilters" class="px-3 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">
+                    Reset
+                </button>
+            </div>
+
             <button @click="openForm()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                 + Add Transaction
             </button>
@@ -58,102 +93,35 @@
             </table>
         </div>
 
-        <!-- Modal Form -->
-        <div v-if="showForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg w-full max-w-lg">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
-                    {{ form.ID ? "Edit Transaction" : "Add Transaction" }}
-                </h2>
-
-                <form @submit.prevent="saveTransaction">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm mb-1">Date</label>
-                            <input v-model="form.Date" type="date"
-                                class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white" required />
-                        </div>
-                        <div>
-                            <label class="block text-sm mb-1">Type</label>
-                            <select v-model="form.Type"
-                                class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white" required>
-                                <option value="income">Income</option>
-                                <option value="expense">Expense</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="mt-3">
-                        <label class="block text-sm mb-1">Description</label>
-                        <input v-model="form.Description" type="text"
-                            class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
-                            placeholder="e.g. Salary, Shopping..." required />
-                    </div>
-
-                    <div class="mt-3 grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm mb-1">Category</label>
-                            <select v-model="form.CategoryID"
-                                class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white" required>
-                                <option v-for="c in categories" :key="c.ID" :value="c.ID">
-                                    {{ c.Name }}
-                                </option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm mb-1">Account</label>
-                            <select v-model="form.AccountID"
-                                class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white" required>
-                                <option v-for="a in accounts" :key="a.ID" :value="a.ID">
-                                    {{ a.Name }}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="mt-3">
-                        <label class="block text-sm mb-1">Amount</label>
-                        <input v-model.number="form.Amount" type="number"
-                            class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white" required />
-                    </div>
-
-                    <div class="mt-6 flex justify-end gap-2">
-                        <button type="button" @click="closeForm"
-                            class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">
-                            Cancel
-                        </button>
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                            Save
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <!-- Modal Form (sama seperti sebelumnya) -->
+        <TransactionForm v-if="showForm" :form="form" :members="members" :categories="categories" @close="closeForm"
+            @saved="fetchTransactions" />
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import api from "@/utils/axios";
+import TransactionForm from "@/components/TransactionForm.vue"; // form yg tadi kamu udah punya
 
 // States
 const transactions = ref([]);
 const categories = ref([]);
-const accounts = ref([]);
+const members = ref([]);
 const showForm = ref(false);
 
-const form = ref({
-    ID: null,
-    Date: "",
-    Type: "expense",
-    Description: "",
-    CategoryID: null,
-    AccountID: null,
-    Amount: 0,
+const form = ref({});
+const filters = ref({
+    member_id: "",
+    category_id: "",
+    type: "",
+    start_date: "",
+    end_date: "",
 });
 
 // Methods
 const fetchTransactions = async () => {
-    const { data } = await api.get("/api/transactions");
+    const { data } = await api.get("/api/transactions", { params: filters.value });
     transactions.value = data.data || [];
 };
 
@@ -162,14 +130,21 @@ const fetchCategories = async () => {
     categories.value = data.data || [];
 };
 
-const fetchAccounts = async () => {
-    const { data } = await api.get("/api/accounts");
-    accounts.value = data.data || [];
+const fetchMembers = async () => {
+    const { data } = await api.get("/api/members");
+    members.value = data.data || [];
 };
 
 const openForm = (tx = null) => {
     if (tx) {
-        form.value = { ...tx, CategoryID: tx.CategoryID, AccountID: tx.AccountID };
+        form.value = {
+            ...tx,
+            CategoryID: tx.CategoryID,
+            AccountID: tx.AccountID,
+            MemberID: tx.MemberID,
+            // mapping relasi agar tetap bisa dipakai di form
+            AccountType: tx.Account?.Type || null,
+        };
     } else {
         form.value = {
             ID: null,
@@ -178,25 +153,14 @@ const openForm = (tx = null) => {
             Description: "",
             CategoryID: null,
             AccountID: null,
+            MemberID: null,
+            AccountType: null,
             Amount: 0,
         };
     }
     showForm.value = true;
 };
-
-const closeForm = () => {
-    showForm.value = false;
-};
-
-const saveTransaction = async () => {
-    if (form.value.ID) {
-        await api.put(`/api/transactions/${form.value.ID}`, form.value);
-    } else {
-        await api.post("/api/transactions", form.value);
-    }
-    closeForm();
-    fetchTransactions();
-};
+const closeForm = () => (showForm.value = false);
 
 const deleteTransaction = async (id) => {
     if (confirm("Are you sure you want to delete this transaction?")) {
@@ -205,13 +169,20 @@ const deleteTransaction = async (id) => {
     }
 };
 
+const resetFilters = () => {
+    filters.value = {
+        member_id: "",
+        category_id: "",
+        type: "",
+        start_date: "",
+        end_date: "",
+    };
+    fetchTransactions();
+};
+
 // Helpers
 const formatCurrency = (value) =>
-    new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-        minimumFractionDigits: 0,
-    }).format(value);
+    new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(value);
 
 const formatDate = (date) => new Date(date).toLocaleDateString("id-ID");
 
@@ -219,6 +190,7 @@ const formatDate = (date) => new Date(date).toLocaleDateString("id-ID");
 onMounted(() => {
     fetchTransactions();
     fetchCategories();
-    fetchAccounts();
+    fetchMembers();
 });
+
 </script>
