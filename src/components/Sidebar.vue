@@ -13,32 +13,60 @@
     <!-- Navigation -->
     <nav class="flex-1 overflow-y-auto px-2">
       <ul class="space-y-1">
-        <li v-for="(item, idx) in menu" :key="idx">
-          <router-link v-if="!item.children" :to="item.to"
-            class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200">
-            <component :is="item.icon" class="w-5 h-5" />
-            <span v-if="isOpen">{{ item.label }}</span>
-          </router-link>
+        <template v-for="(item, idx) in menu" :key="idx">
+          <!-- Expanded Mode -->
+          <template v-if="isOpen">
+            <li v-if="!item.children">
+              <router-link :to="item.to"
+                class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200">
+                <component :is="item.icon" class="w-5 h-5" />
+                <span>{{ item.label }}</span>
+              </router-link>
+            </li>
+            <li v-else>
+              <div>
+                <button @click="toggleDropdown(idx)"
+                  class="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200">
+                  <component :is="item.icon" class="w-5 h-5" />
+                  <span>{{ item.label }}</span>
+                  <ChevronDown :class="['ml-auto transition-transform', openIndex === idx ? 'rotate-180' : '']" />
+                </button>
+                <ul v-if="openIndex === idx" class="pl-8 mt-1 space-y-1">
+                  <li v-for="(child, cidx) in item.children" :key="cidx">
+                    <router-link :to="child.to"
+                      class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300">
+                      <component :is="child.icon" class="w-4 h-4" />
+                      <span>{{ child.label }}</span>
+                    </router-link>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </template>
 
-          <!-- Submenu -->
-          <div v-else>
-            <button @click="toggleDropdown(idx)"
-              class="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200">
-              <component :is="item.icon" class="w-5 h-5" />
-              <span v-if="isOpen">{{ item.label }}</span>
-              <ChevronDown v-if="isOpen"
-                :class="['ml-auto transition-transform', openIndex === idx ? 'rotate-180' : '']" />
-            </button>
-            <ul v-if="isOpen && openIndex === idx" class="pl-8 mt-1 space-y-1">
-              <li v-for="(child, cidx) in item.children" :key="cidx">
-                <router-link :to="child.to"
-                  class="block p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300">
-                  {{ child.label }}
-                </router-link>
-              </li>
-            </ul>
-          </div>
-        </li>
+          <!-- Collapsed Mode - Show only children -->
+          <template v-else-if="item.children">
+            <li v-for="(child, cidx) in item.children" :key="'child-' + cidx">
+              <router-link :to="child.to"
+                class="flex items-center justify-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300">
+                <component :is="child.icon" class="w-5 h-5" />
+                <!-- Optional: Tooltip untuk label saat collapsed -->
+                <span class="sr-only">{{ child.label }}</span>
+              </router-link>
+            </li>
+          </template>
+
+          <!-- Collapsed Mode - Single items -->
+          <template v-else>
+            <li>
+              <router-link :to="item.to"
+                class="flex items-center justify-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300">
+                <component :is="item.icon" class="w-5 h-5" />
+                <span class="sr-only">{{ item.label }}</span>
+              </router-link>
+            </li>
+          </template>
+        </template>
       </ul>
     </nav>
 

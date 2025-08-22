@@ -12,6 +12,7 @@ import Member from "@/pages/Members.vue";
 import Account from "@/pages/Accounts.vue";
 import Category from "@/pages/Categories.vue";
 import Budget from "@/pages/Budgets.vue";
+import Transaction from "../pages/Transactions.vue";
 
 const routes = [
   { path: "/login", component: Login, meta: { guestOnly: true } },
@@ -27,6 +28,7 @@ const routes = [
       { path: "accounts", component: Account, meta: { breadcrumb: "Accounts" } },
       { path: "categories", component: Category, meta: { breadcrumb: "Categories" } },
       { path: "budgets", component: Budget, meta: { breadcrumb: "Budgets" } },
+      { path: "transactions", component: Transaction, meta: { breadcrumb: "Transactions" } },
     ],
   },
 ];

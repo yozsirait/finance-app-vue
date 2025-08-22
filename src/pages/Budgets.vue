@@ -60,7 +60,7 @@
               </td>
             </tr>
           </tbody>
-        </table>
+          </table>
       </div>
     </div>
 
@@ -69,7 +69,7 @@
       <Users class="w-16 h-16 text-gray-400 mx-auto mb-4" />
       <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No budgets yet</h3>
       <p class="text-gray-500 dark:text-gray-400 mb-4">Get started by adding your first budget.</p>
-      <button @click="showAddModal = true" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">Add Budget</button>
+      <!-- <button @click="showAddModal = true" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">Add Budget</button> -->
     </div>
 
     <!-- Add/Edit Modal -->
